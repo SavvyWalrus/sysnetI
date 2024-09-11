@@ -1,8 +1,10 @@
 #include "./parse.hpp"
+#include <cctype>
+#include <cstdlib>
 #include <iostream>
 #include <sstream>
 
-void Parse::promptUser() {
+void Parse::promptUser(bool debug) {
     string command = "";
 
     do {
@@ -12,13 +14,19 @@ void Parse::promptUser() {
 
     setCommand(command);
     parseTokens();
+
+    if (debug) param.printParams();
 }
 
 void Parse::parseTokens() {
     istringstream buffer(command);
     string tempToken;
     
-    while (getline(buffer, tempToken)) {
+    while (buffer >> tempToken) {
+        if (tempToken == "exit") {
+            EXIT_SUCCESS;
+        }
+
         if (tempToken[0] == '<') {
             param.setInputRedirect(tempToken.substr(1));
         } else if (tempToken[0] == '>') {

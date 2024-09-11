@@ -4,7 +4,7 @@
 
 class Parse {
     public:
-        void promptUser();
+        void promptUser(bool debug);
         void setCommand(string command) {this->command = command;}
     private:
         Param param;
