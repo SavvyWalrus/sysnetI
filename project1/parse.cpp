@@ -1,40 +1,48 @@
 #include "./parse.hpp"
 #include <cctype>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 
+void Parse::setCommandInput(const char* commandInput) {
+    // Copy the input command into the class member variable `commandInput`
+    strncpy(this->commandInput, commandInput, sizeof(this->commandInput) - 1);
+    this->commandInput[sizeof(this->commandInput) - 1] = '\0';  // Ensure null termination
+}
+
 void Parse::promptUser(bool debug) {
-    string command = "";
+    char commandInput[1024];
 
     do {
         cout << "$$$ ";
-        getline(cin, command);
-    } while (command == "");
+        cin.getline(commandInput, 1024);
+    } while (strlen(commandInput) == 0);
 
-    setCommand(command);
+    setCommandInput(commandInput);
     parseTokens();
 
     if (debug) param.printParams();
 }
 
 void Parse::parseTokens() {
-    istringstream buffer(command);
-    string tempToken;
+    char* token = strtok(commandInput, " ");
     
-    while (buffer >> tempToken) {
-        if (tempToken == "exit") {
+    while (token != nullptr) {
+        if (strcmp(token, "exit")) {
             EXIT_SUCCESS;
         }
 
-        if (tempToken[0] == '<') {
-            param.setInputRedirect(tempToken.substr(1));
-        } else if (tempToken[0] == '>') {
-            param.setOutputRedirect(tempToken.substr(1));
-        } else if (tempToken == "&") {
+        if (token[0] == '<') {
+            param.setInputRedirect(&token[1]);
+        } else if (token[0] == '>') {
+            param.setOutputRedirect(&token[1]);
+        } else if (strcmp(token, "&")) {
             param.setBackground(true);
         } else {
-            param.addArgument(tempToken);
+            param.addArgument(token);
         }
+
+        token = strtok(nullptr, " ");
     }
 }
