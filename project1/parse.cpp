@@ -32,7 +32,7 @@ void Parse::parseTokens() {
     while (token != nullptr) {
         // Exits on exit token
         if (strcmp(token, "exit") == 0) {
-            EXIT_SUCCESS;
+            exit(0);
         }
 
         // Parses token types and adds them to param class
