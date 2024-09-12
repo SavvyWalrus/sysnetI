@@ -12,12 +12,12 @@ void Parse::setCommandInput(const char* commandInput) {
 }
 
 void Parse::promptUser(bool debug) {
-    char commandInput[1024];
+    char commandInput[32];
 
-    do {
-        cout << "$$$ ";
-        cin.getline(commandInput, 1024);
-    } while (strlen(commandInput) == 0);
+    param.clearArguments();
+
+    cout << "$$$ ";
+    cin.getline(commandInput, 32);
 
     setCommandInput(commandInput);
     parseTokens();
@@ -29,7 +29,7 @@ void Parse::parseTokens() {
     char* token = strtok(commandInput, " ");
     
     while (token != nullptr) {
-        if (strcmp(token, "exit")) {
+        if (strcmp(token, "exit") == 0) {
             EXIT_SUCCESS;
         }
 
@@ -37,7 +37,7 @@ void Parse::parseTokens() {
             param.setInputRedirect(&token[1]);
         } else if (token[0] == '>') {
             param.setOutputRedirect(&token[1]);
-        } else if (strcmp(token, "&")) {
+        } else if (strcmp(token, "&") == 0) {
             param.setBackground(true);
         } else {
             param.addArgument(token);

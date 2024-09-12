@@ -10,7 +10,7 @@ class Parse {
         void setCommandInput(const char* commandInput);
     private:
         Param param;
-        char commandInput[1024]; // Stores user entered command
+        char commandInput[32]; // Stores user entered command
         void parseTokens(); // Parses and stores command tokens into the param object
 };
 

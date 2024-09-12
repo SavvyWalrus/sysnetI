@@ -47,6 +47,11 @@ class Param
 		 *   Caller must deallocate memory for the list.
 		 */
 		char** getArguments();
+
+        /**
+         * Clears the list of arguments.
+         */
+         void clearArguments();
 	
 		// getter & setter functions
 		
@@ -80,10 +85,18 @@ class Param
 		char* getInputRedirect();
 		
 		
-		// finish documentation 
+		/**
+		 * Returns the filename for output redirection.
+		 *
+		 * @return a string representing a filename
+		 */
 		char* getOutputRedirect();
 		
-		// finish documentation
+		/**
+		 * Returns an int for if it's a background process.
+		 *
+		 * @return an int representing if it's a background process
+		 */
 		int getBackground();
 		
 	

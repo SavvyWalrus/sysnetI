@@ -10,7 +10,10 @@ int main(int argc, char **argv) {
     }
 
     Parse parse;
-    parse.promptUser(debug);
+
+    while (true) {
+        parse.promptUser(debug);
+    }
     
     return 0;
 }

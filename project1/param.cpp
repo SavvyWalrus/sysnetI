@@ -10,6 +10,7 @@
 #define _PARAM_CPP
 
 #include <cstddef>
+#include <cstring>
 #include <iostream>
 
 #include "param.hpp"
@@ -25,9 +26,16 @@ Param::Param()
 
 void Param::addArgument (char* newArgument)
 {
+    // Early exit if no argument
 	if (newArgument == NULL) return;
-	argumentVector[argumentCount] = newArgument;
-	++argumentCount;
+
+    // Allocates memory for the new argument
+    argumentVector[argumentCount] = new char[strlen(newArgument)];
+
+    // Copies the argument into argumentVector
+	strcpy(argumentVector[argumentCount], newArgument);
+
+	++argumentCount; // Increments number of stored arguments
 }
 
 char** Param::getArguments()
@@ -44,6 +52,19 @@ char** Param::getArguments()
 	argList[argumentCount] = NULL;
 
 	return argList;
+}
+
+void Param::clearArguments() {
+    // Iterates through the argumentVector and deletes each allocated argument
+    for (int i = 0; i < argumentCount; ++i) {
+        delete[] argumentVector[i];
+        argumentVector[i] = nullptr;
+    }
+
+    argumentCount = 0; // Reset the argument count
+    setBackground(0); // Resets the background variable
+    setInputRedirect(NULL); // Resets the input redirect
+    setOutputRedirect(NULL); // Resets the output redirect
 }
 
 void Param::setInputRedirect(char *newInputRedirect)
@@ -80,11 +101,11 @@ int Param::getBackground()
 
 void Param::printParams() {
 	cout << "InputRedirect: [" 
-	     << (inputRedirect != NULL) ? inputRedirect : "NULL";
+	     << ((inputRedirect != NULL) ? inputRedirect : "NULL");
 	cout << "]" 
 	     << endl 
 		 <<	"OutputRedirect: [" 
-		 << (outputRedirect != NULL) ? outputRedirect : "NULL";
+		 << ((outputRedirect != NULL) ? outputRedirect : "NULL");
 	cout << "]" 
 	     << endl 
 		 << "Background: [" 
