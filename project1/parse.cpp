@@ -26,13 +26,16 @@ void Parse::promptUser(bool debug) {
 }
 
 void Parse::parseTokens() {
-    char* token = strtok(commandInput, " ");
+    char* token = strtok(commandInput, " "); // Tokenize first argument
     
+    // Loops until no more tokens are found
     while (token != nullptr) {
+        // Exits on exit token
         if (strcmp(token, "exit") == 0) {
             EXIT_SUCCESS;
         }
 
+        // Parses token types and adds them to param class
         if (token[0] == '<') {
             param.setInputRedirect(&token[1]);
         } else if (token[0] == '>') {
@@ -43,6 +46,8 @@ void Parse::parseTokens() {
             param.addArgument(token);
         }
 
-        token = strtok(nullptr, " ");
+        token = strtok(nullptr, " "); // Tokenize next argument
+
+        if (param.getBackground() == 1) exit(1); // Ensures that & must be the last character if used
     }
 }
