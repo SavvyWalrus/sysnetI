@@ -24,6 +24,17 @@ Param::Param()
 	argumentCount = 0;
 }
 
+Param::~Param() {
+	// Iterates through the argumentVector and deletes each allocated argument
+    for (int i = 0; i < argumentCount; ++i) {
+        delete[] argumentVector[i];
+        argumentVector[i] = nullptr;
+    }
+
+	delete inputRedirect;
+	delete outputRedirect;
+}
+
 void Param::addArgument (char* newArgument)
 {
     // Early exit if no argument
@@ -54,7 +65,8 @@ char** Param::getArguments()
 	return argList;
 }
 
-void Param::clearArguments() {
+void Param::clearArguments()
+{
     // Iterates through the argumentVector and deletes each allocated argument
     for (int i = 0; i < argumentCount; ++i) {
         delete[] argumentVector[i];

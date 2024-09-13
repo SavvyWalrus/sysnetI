@@ -10,7 +10,7 @@
 #define _PARAM_HPP
 
 /* Don't test program with more than this many tokens for input  */
-#define MAXARGS 32
+const int MAXARGS = 32;
 
 /* Class to hold input data                                  */
 class Param
@@ -27,8 +27,20 @@ class Param
 		/**
 		 * Constructs an empty Param object.
 		 */
-		Param(); 
-		
+		Param();
+
+		/**
+		 * Destructor for the object
+		 */
+		~Param();
+
+		/**
+		 * Returns the maximum number of allowed arguments
+		 *
+		 * @return an int representing the maximum number of allowed arguments
+		 */
+		int getMaxArgs() {return MAXARGS;}
+
 		/**
 		 * Adds an argument string to the argument list in this object. This function
 		 * does not create a string copy of the original string. 
