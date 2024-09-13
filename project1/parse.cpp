@@ -1,9 +1,8 @@
 #include "./parse.hpp"
-#include <cctype>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <sstream>
+using namespace std;
 
 void Parse::setCommandInput(const char *commandInput)
 {
@@ -12,14 +11,14 @@ void Parse::setCommandInput(const char *commandInput)
     this->commandInput[sizeof(this->commandInput) - 1] = '\0'; // Ensure null termination
 }
 
-void Parse::promptUser(bool debug)
+void Parse::promptUser(bool debug) 
 {
-    char commandInput[32];
+    char commandInput[MAXARGS];
 
     param.clearArguments();
 
     cout << "$$$ ";
-    cin.getline(commandInput, 32);
+    cin.getline(commandInput, MAXARGS);
 
     setCommandInput(commandInput);
     parseTokens();
@@ -33,8 +32,13 @@ void Parse::parseTokens()
     char *token = strtok(commandInput, " "); // Tokenize first argument
 
     // Loops until no more tokens are found
-    while (token != nullptr)
-    {
+    while (token != nullptr) {
+        // Ensures that '&' must be the last argument if used
+        if (param.getBackground() == 1) {
+            cout << "Invalid args : To indicate a background process, use a single '&' as the final argument" << endl;
+            return;
+        }
+
         // Exits on exit token
         if (strcmp(token, "exit") == 0)
         {
@@ -84,8 +88,5 @@ void Parse::parseTokens()
         }
 
         token = strtok(nullptr, " "); // Tokenize next argument
-
-        if (param.getBackground() == 1)
-            exit(1); // Ensures that & must be the last character if used
     }
 }
