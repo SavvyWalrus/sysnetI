@@ -90,3 +90,19 @@ void Parse::parseTokens()
         token = strtok(nullptr, " "); // Tokenize next argument
     }
 }
+
+char** Parse::getArguments() {
+    return param.getArguments();
+}
+
+char* Parse::getInputRedirect() {
+    return param.getInputRedirect();
+}
+
+char* Parse::getOutputRedirect() {
+    return param.getOutputRedirect();
+}
+
+int Parse::getBackground() {
+    return param.getBackground();
+}

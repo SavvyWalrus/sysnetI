@@ -28,20 +28,19 @@ Param::~Param() {
 	// Iterates through the argumentVector and deletes each allocated argument
     for (int i = 0; i < argumentCount; ++i) {
         delete[] argumentVector[i];
-        argumentVector[i] = nullptr;
     }
 
-	delete inputRedirect;
-	delete outputRedirect;
+	delete[] inputRedirect;
+	delete[] outputRedirect;
 }
 
 void Param::addArgument (char* newArgument)
 {
-    // Early exit if no argument
-	if (newArgument == NULL) return;
+    // Early exit if no argument or too many arguments
+	if (newArgument == NULL || argumentCount >= MAXARGS) return;
 
     // Allocates memory for the new argument
-    argumentVector[argumentCount] = new char[strlen(newArgument)];
+    argumentVector[argumentCount] = new char[strlen(newArgument) + 1];
 
     // Copies the argument into argumentVector
 	strcpy(argumentVector[argumentCount], newArgument);
@@ -51,18 +50,7 @@ void Param::addArgument (char* newArgument)
 
 char** Param::getArguments()
 {
-	// Dynamically allocate memory for argList of size argument count + 1
-	char** argList = new char*[argumentCount + 1];
-	
-	// Copy the pointers from argumentVector to argList
-	for (int i = 0; i < argumentCount; ++i) {
-		argList[i] = argumentVector[i];
-	}
-
-	// Sets the last element to NULL to indicate the end of the list
-	argList[argumentCount] = NULL;
-
-	return argList;
+	return argumentVector;
 }
 
 void Param::clearArguments()
@@ -81,11 +69,19 @@ void Param::clearArguments()
 
 void Param::setInputRedirect(char *newInputRedirect)
 {
+	if (inputRedirect != NULL) {
+		delete[] inputRedirect;
+	}
+
 	inputRedirect = newInputRedirect;
 }
 
 void Param::setOutputRedirect(char *newOutputRedirect)
 {
+	if (outputRedirect != NULL) {
+		delete[] outputRedirect;
+	}
+
 	outputRedirect = newOutputRedirect;
 }
 		
