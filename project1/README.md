@@ -37,5 +37,6 @@ The shell parses user commands, creates new processes, and manages process execu
  - parse.cpp: Handles the parsing of command-line input into tokens (for use in process execution).
  - param.cpp: Implements the Param class, which stores parsed input (arguments, redirection files, etc.).
  - param.hpp: Defines the Param class and its methods.
+ - slow.c: Used for testing
  - Makefile: Builds the project and produces the myshell executable.
  - README: Describes the purpose, usage, and details of the shell.
