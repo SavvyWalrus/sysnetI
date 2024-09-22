@@ -12,11 +12,7 @@
 #include <iostream>
 using namespace std;
 
-/**
- * Copies the input command provided by the user to the class member variable `commandInput`.
- * 
- * @param commandInput The input command string entered by the user.
- */
+
 void Parse::setCommandInput(const char *commandInput)
 {
     // Copy the input command into the class member variable `commandInput`
@@ -24,11 +20,6 @@ void Parse::setCommandInput(const char *commandInput)
     this->commandInput[sizeof(this->commandInput) - 1] = '\0'; // Ensure null termination
 }
 
-/**
- * Prompts the user for a command and parses it.
- * 
- * @param debug If true, prints the parsed parameters after parsing the input.
- */
 void Parse::promptUser(bool debug) 
 {
     char commandInput[MAXARGS];
@@ -49,10 +40,6 @@ void Parse::promptUser(bool debug)
         param.printParams();
 }
 
-/**
- * Tokenizes and processes the command input.
- * 
- */
 void Parse::parseTokens()
 {
     char *token = strtok(commandInput, " "); // Tokenize first argument
@@ -117,30 +104,21 @@ void Parse::parseTokens()
     }
 }
 
-/**
- * Returns the parsed arguments as a list of strings.
- */
 char** Parse::getArguments() {
     return param.getArguments();
 }
 
-/**
- * Retrieves the input redirection file, if specified.
- */
+
 char* Parse::getInputRedirect() {
     return param.getInputRedirect();
 }
 
-/**
- * Retrieves the output redirection file, if specified.
- */
+
 char* Parse::getOutputRedirect() {
     return param.getOutputRedirect();
 }
 
-/**
- * Retrieves the background execution flag.
- */
+
 int Parse::getBackground() {
     return param.getBackground();
 }
