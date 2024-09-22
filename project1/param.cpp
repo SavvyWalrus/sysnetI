@@ -17,6 +17,7 @@
 
 using  namespace std;
 
+
 Param::Param() 
 {
 	inputRedirect = outputRedirect = NULL;

@@ -1,3 +1,11 @@
+/**
+ * param.hpp
+ * 
+ * @authors Sarah Wallis, Dustin Evans
+ * @date 9/22/2024
+ * @info Course COP4634
+ */
+
 #ifndef PARSE_HPP
 #define PARSE_HPP
 #include "./param.hpp"

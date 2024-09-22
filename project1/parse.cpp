@@ -1,9 +1,22 @@
+/**
+ * param.cpp
+ * 
+ * @authors Sarah Wallis, Dustin Evans
+ * @date 9/22/2024
+ * @info Course COP4634
+ */
+
 #include "./parse.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 using namespace std;
 
+/**
+ * Copies the input command provided by the user to the class member variable `commandInput`.
+ * 
+ * @param commandInput The input command string entered by the user.
+ */
 void Parse::setCommandInput(const char *commandInput)
 {
     // Copy the input command into the class member variable `commandInput`
@@ -11,22 +24,35 @@ void Parse::setCommandInput(const char *commandInput)
     this->commandInput[sizeof(this->commandInput) - 1] = '\0'; // Ensure null termination
 }
 
+/**
+ * Prompts the user for a command and parses it.
+ * 
+ * @param debug If true, prints the parsed parameters after parsing the input.
+ */
 void Parse::promptUser(bool debug) 
 {
     char commandInput[MAXARGS];
 
+    // Clears previous arguments
     param.clearArguments();
 
+    // Sets command prompt and takes in user input
     cout << "$$$ ";
     cin.getline(commandInput, MAXARGS);
 
+    // Store input and parse
     setCommandInput(commandInput);
     parseTokens();
 
+    // If true, prints the parsed parameters
     if (debug)
         param.printParams();
 }
 
+/**
+ * Tokenizes and processes the command input.
+ * 
+ */
 void Parse::parseTokens()
 {
     char *token = strtok(commandInput, " "); // Tokenize first argument
@@ -51,7 +77,7 @@ void Parse::parseTokens()
             token = strtok(nullptr, " "); // Get next token for the filename
             if (token != nullptr)
             {
-                param.setInputRedirect(token);
+                param.setInputRedirect(token); // Store input refirect
             }
             else
             {
@@ -63,7 +89,7 @@ void Parse::parseTokens()
             token = strtok(nullptr, " ");
             if (token != nullptr)
             {
-                param.setOutputRedirect(token);
+                param.setOutputRedirect(token); // Store output redirection
             }
             else
             {
@@ -91,18 +117,30 @@ void Parse::parseTokens()
     }
 }
 
+/**
+ * Returns the parsed arguments as a list of strings.
+ */
 char** Parse::getArguments() {
     return param.getArguments();
 }
 
+/**
+ * Retrieves the input redirection file, if specified.
+ */
 char* Parse::getInputRedirect() {
     return param.getInputRedirect();
 }
 
+/**
+ * Retrieves the output redirection file, if specified.
+ */
 char* Parse::getOutputRedirect() {
     return param.getOutputRedirect();
 }
 
+/**
+ * Retrieves the background execution flag.
+ */
 int Parse::getBackground() {
     return param.getBackground();
 }

@@ -1,3 +1,11 @@
+/**
+ * myshell.cpp
+ * 
+ * @authors Sarah Wallis, Dustin Evans
+ * @date 9/22/2024
+ * @info Course COP4634
+ */
+
 #include "./parse.hpp"
 #include <cstdio>
 #include <cstdlib>
@@ -9,16 +17,28 @@
 #include <sys/wait.h>
 using namespace std;
 
+/**
+ * Execute commands from input and output redirection, handles whether the command runs in the background
+ * or foreground.
+ * @param command 
+ * @param inputArguments
+ * @param inputRedirect
+ * @param outputRedirect
+ * @param background
+ */
 void executeCommand(char* command, char** inputArguments, char* inputRedirect, char* outputRedirect, int background) {
     int status;
-    pid_t pid = fork();
 
-    if (pid == -1) {
+    // Create new process to execute command
+    pid_t pid = fork(); 
+
+    if (pid == -1) { // Check for error during fork
         cout << "Error forking process" << endl;
         exit(EXIT_FAILURE);
     }
     
-    if (pid == 0) {  // Child process
+    // Child process
+    if (pid == 0) {  
         // Handle input redirection
         if (inputRedirect != NULL) {
             if (freopen(inputRedirect, "r", stdin) == NULL) {
@@ -42,7 +62,7 @@ void executeCommand(char* command, char** inputArguments, char* inputRedirect, c
         }
     }
 
-
+    // If 'background' is false, wait for the child process to finish
     if (!background) {
         waitpid(pid, &status, 0);
     }
