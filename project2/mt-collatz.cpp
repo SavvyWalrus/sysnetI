@@ -36,9 +36,13 @@ void compute_collatz(int num) {
 
 // Main thread function for computing Collatz stopping times for values in range [1,N]
 void collatz_worker(int N) {
-    do {
-        compute_collatz(COUNTER);
-    } while (N > COUNTER++);
+    while (true) {
+        int num = COUNTER++;
+        if (num > N) {
+            break;
+        }
+        compute_collatz(num);
+    }
 }
 
 // Initializes a vector of T number of threads and joins them to await their completion
