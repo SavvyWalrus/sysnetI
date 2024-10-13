@@ -1,20 +1,14 @@
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -pthread
+CXX=g++
+CXXFLAGS=-std=c++14 -Wall -g
+RM=rm -rf
 
-TARGET = mt-collatz
+.PHONY: clean
 
-SRC = mt-collatz.cpp
-OBJ = $(SRC:.cpp=.o)
+mt-collatz: mt-collatz.o
+	$(CXX) -o $@ $^
 
-all: $(TARGET)
-
-$(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJ)
-
-%.o: %.cpp mt-collatz.hpp
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	rm -f $(OBJ) $(TARGET)
-
-.PHONY: all clean
+	$(RM) -rf *.o mt-collatz *.gc* *.dSYM
