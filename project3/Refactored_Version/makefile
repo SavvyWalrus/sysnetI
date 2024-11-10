@@ -4,11 +4,11 @@ RM=rm -rf
 
 .PHONY: clean
 
-lizard: lizard.o
+main: main.o cat.o lizard.o constants.o global.o
 	$(CXX) -o $@ $^
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	$(RM) -rf *.o lizard *.gc* *.dSYM
+	$(RM) -rf *.o main *.gc* *.dSYM

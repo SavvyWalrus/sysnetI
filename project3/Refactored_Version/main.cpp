@@ -59,20 +59,20 @@ int main(int argc, char **argv) {
     /*
      * Create NUM_CATS cat threads
      */
-	vector<Cat*> allCats; // SW
-    for (int i=0; i < NUM_CATS; i++) { // SW
-	    allCats.push_back(new Cat(i)); // SW
-    } // SW
+     vector<Cat*> allCats; // SW
+     for (int i=0; i < NUM_CATS; i++) { // SW
+          allCats.push_back(new Cat(i)); // SW
+     } // SW
 
 	/*
 	 * Run NUM_LIZARDS and NUM_CATS threads
 	 */
-    for (int i=0; i < NUM_LIZARDS; i++) {
-        allLizards[i]->run();
-    }
-    for (int i = 0; i < NUM_CATS; ++i) { // SW
-        allCats[i]->run(); // SW
-    } // SW
+     for (int i=0; i < NUM_LIZARDS; i++) {
+          allLizards[i]->run();
+     }
+     for (int i = 0; i < NUM_CATS; ++i) { // SW
+          allCats[i]->run(); // SW
+     } // SW
 
 	/*
      * Now let the world run for a while
@@ -87,12 +87,12 @@ int main(int argc, char **argv) {
     /*
      * Wait until all threads terminate
      */
-    for (int i = 0; i < NUM_LIZARDS; ++i) { // SW
-        allLizards[i]->wait(); // SW
-    } // SW
-    for (int i = 0; i < NUM_CATS; ++i) { // SW
-        allCats[i]->wait(); // SW
-    } // SW
+     for (int i = 0; i < NUM_LIZARDS; ++i) { // SW
+          allLizards[i]->wait(); // SW
+     } // SW
+     for (int i = 0; i < NUM_CATS; ++i) { // SW
+          allCats[i]->wait(); // SW
+     } // SW
 
 
 
