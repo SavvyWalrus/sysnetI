@@ -1,8 +1,10 @@
+#include <condition_variable>
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
 #include <vector>
 #include "./lizard.hpp"
+#include "./cat.hpp"
 #include "./constants.hpp"
 #include "./global.hpp"
 
@@ -25,7 +27,6 @@ int main(int argc, char **argv) {
 	/*
      * Check for the debugging flag (-d)
      */
-	debug = 0;
 	if (argc > 1 && strncmp(argv[1], "-d", 2) == 0) {
         debug = 1;
     }
@@ -33,9 +34,7 @@ int main(int argc, char **argv) {
 	/*
      * Initialize variables
      */
-	numCrossingSago2MonkeyGrass = 0;
-	numCrossingMonkeyGrass2Sago = 0;
-	running = 1;
+	
 
 	/*
      * Initialize random number generator
@@ -45,7 +44,7 @@ int main(int argc, char **argv) {
 	/*
      * Initialize locks and/or semaphores
      */
-
+    
 
 
 
@@ -55,12 +54,15 @@ int main(int argc, char **argv) {
     vector<Lizard*> allLizards;
     for (int i=0; i < NUM_LIZARDS; i++) {
 	    allLizards.push_back(new Lizard(i));
-    }    
+    }
 
     /*
      * Create NUM_CATS cat threads
      */
-	
+	vector<Cat*> allCats; // SW
+    for (int i=0; i < NUM_CATS; i++) { // SW
+	    allCats.push_back(new Cat(i)); // SW
+    } // SW
 
 	/*
 	 * Run NUM_LIZARDS and NUM_CATS threads
@@ -68,6 +70,9 @@ int main(int argc, char **argv) {
     for (int i=0; i < NUM_LIZARDS; i++) {
         allLizards[i]->run();
     }
+    for (int i = 0; i < NUM_CATS; ++i) { // SW
+        allCats[i]->run(); // SW
+    } // SW
 
 	/*
      * Now let the world run for a while
@@ -82,7 +87,12 @@ int main(int argc, char **argv) {
     /*
      * Wait until all threads terminate
      */
-
+    for (int i = 0; i < NUM_LIZARDS; ++i) { // SW
+        allLizards[i]->wait(); // SW
+    } // SW
+    for (int i = 0; i < NUM_CATS; ++i) { // SW
+        allCats[i]->wait(); // SW
+    } // SW
 
 
 

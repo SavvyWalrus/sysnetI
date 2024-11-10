@@ -2,12 +2,10 @@
 #define LIZARD_HPP
 
 #include <thread>
+#include <mutex>
 using namespace std;
 
 class Lizard {
-	int     _id;      // the Id of the lizard
-	thread* _aLizard; // the thread simulating the lizard
-
 	public:
         /**
         * Constructs a lizard.
@@ -25,47 +23,44 @@ class Lizard {
 
         /**
         * Launches a lizard thread.
-        * 
-        * Status: Incomplete - Make changes to this code.
         */
         void run();
 
         /**
         * Waits for a lizard to finish running.
-        *
-        * Status: Incomplete - Make changes to this code.
         */
         void wait();
 
     private:
+        int     _id;      // the Id of the lizard
+	    thread* _aLizard; // the thread simulating the lizard
+
         /**
         * Returns when it is safe for this lizard to cross from the sago
         * to the monkey grass.   Should use some synchronization 
         * facilities (lock/semaphore) here.
         *
-        * Status: Incomplete - Make changes as you see are necessary.
+        * @param lock - The mutex needed to manage crossing variables race conditions
         */
-		void sago2MonkeyGrassIsSafe();
+		void sago2MonkeyGrassIsSafe(unique_lock<mutex>& lock); // SW
 
         /**
         * Delays for 1 second to simulate crossing from the sago to
         * the monkey grass. 
         *
-        * Status: Incomplete - Make changes as you see are necessary.
+        * @param lock - The mutex needed to manage crossing variables race conditions
         */
-		void crossSago2MonkeyGrass();
+		void crossSago2MonkeyGrass(unique_lock<mutex>& lock); // SW
 
         /**
         * Tells others they can go now
         *
-        * Status: Incomplete - Make changes as you see are necessary.
+        * @param lock - The mutex needed to manage crossing variables race conditions
         */
-		void madeIt2MonkeyGrass();
+		void madeIt2MonkeyGrass(unique_lock<mutex>& lock); // SW
 
         /**
         * Simulate a lizard eating for a random amount of time
-        *
-        * Status: Completed - No need to change any of this code.
         */
 		void eat();
 
@@ -74,29 +69,27 @@ class Lizard {
         * grass to the sago.   Should use some synchronization 
         * facilities (lock/semaphore) here.
         *
-        * Status: Incomplete - Make changes as you see are necessary.
+        * @param lock - The mutex needed to manage crossing variables race conditions
         */
-		void monkeyGrass2SagoIsSafe();
+		void monkeyGrass2SagoIsSafe(unique_lock<mutex>& lock); // SW
 
         /**
         * Delays for 1 second to simulate crossing from the monkey
         * grass to the sago. 
         *
-        * Status: Incomplete - Make changes as you see are necessary.
+        * @param lock - The mutex needed to manage crossing variables race conditions
         */
-		void crossMonkeyGrass2Sago();
+		void crossMonkeyGrass2Sago(unique_lock<mutex>& lock); // SW
 
         /**
         * Tells others they can go now
         *
-        * Status: Incomplete - Make changes as you see are necessary.
+        * @param lock - The mutex needed to manage crossing variables race conditions
         */
-		void madeIt2Sago();
+		void madeIt2Sago(unique_lock<mutex>& lock); // SW
 
         /**
         * Simulate a lizard sleeping for a random amount of time
-        *
-        * Status: Completed - No need to change any of this code.
         */
 		void sleepNow();
 
@@ -106,12 +99,8 @@ class Lizard {
         * between a sago palm and some monkey grass. 
         *  
         * @param aLizard - the lizard to be executed concurrently
-        *
-        * @return N/A
-        
-        * Status: Incomplete - Make changes as you see are necessary.
         */
-        static void lizardThread(Lizard *aLizard);
+        static void lizardThread(Lizard *aLizard); // SW
 };
 
 #endif

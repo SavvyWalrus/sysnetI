@@ -9,10 +9,6 @@ using namespace std;
  * and goes back to sleep. If the cat sees enough lizards it "plays" with them.
  */
 class Cat {
-	
-	int       _id;        // the Id of the cat
-	thread*   _catThread; // the thread simulating the cat
-	
 	public:
         /**
         * Constructs a cat.
@@ -30,26 +26,20 @@ class Cat {
 
         /**
         * Launches a cat thread.
-        * 
-        * Status: Incomplete - Make changes to this code.
         */
 		void run();
 
         /**
         * Waits for a cat to finish running.
-        *
-        * Status: Incomplete - Make changes to this code.
         */
 		void wait();
     
     private:
+        int       _id;        // the Id of the cat
+	    thread*   _catThread; // the thread simulating the cat
+
         /**
         * Simulate a cat sleeping for a random amount of time
-        *
-        *
-        * @return N/A
-        *
-        * Status: Completed - No need to change any of this code.
         */
 		void sleepNow();
 
@@ -58,10 +48,6 @@ class Cat {
         * the driveway on lizards.
         * 
         * @param aCat - a cat that is being run concurrently
-        * 
-        * @return - N/A
-        *
-        * Status: Incomplete - Make changes as you see are necessary.
         */
         static void catThread (Cat *aCat); 
 };

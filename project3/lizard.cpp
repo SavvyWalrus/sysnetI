@@ -42,19 +42,24 @@ void Lizard::run() {
 
 void Lizard::wait() {
     // wait for the thread to terminate
-    if (_aLizard != NULL) {
+    if (_aLizard && _aLizard->joinable()) { // SW
         _aLizard->join();
+        delete _aLizard; // SW
+        _aLizard = nullptr; // SW
     } 
 }
 
-void Lizard::sago2MonkeyGrassIsSafe() {
+void Lizard::sago2MonkeyGrassIsSafe(unique_lock<mutex>& lock) { // SW
 	if (debug) {
 		cout << "[" << _id << "] checking  sago -> monkey grass" << endl;
 		cout << flush;
     }
 
-	
+    lock.lock(); // SW
 
+    crossingCondition.wait(lock, [] { // SW
+        return numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING; // SW
+    }); // SW
 
 	if (debug) {
 		cout << "[" << _id << "] thinks  sago -> monkey grass  is safe" << endl;
@@ -62,27 +67,33 @@ void Lizard::sago2MonkeyGrassIsSafe() {
     }
 }
 
-void Lizard::crossSago2MonkeyGrass() {
+void Lizard::crossSago2MonkeyGrass(unique_lock<mutex>& lock) { // SW
 	if (debug) {
         cout << "[" << _id << "] crossing  sago -> monkey grass" << endl;
         cout << flush;
     }
 
-	/*
-	 * One more crossing this way
-	 */
-	numCrossingSago2MonkeyGrass++;
+    if (!lock.owns_lock()) { // SW
+        cout << "ERROR: Lock not kept between method calls" << endl; // SW
+        exit(1); // SW
+    } // SW
 
-	/*
-     * Check for lizards cross both ways
-     */
-	if (numCrossingMonkeyGrass2Sago && UNIDIRECTIONAL) {
-		cout << "\tCrash!  We have a pile-up on the concrete." << endl;
-		cout << "\t" << numCrossingSago2MonkeyGrass << " crossing sago -> monkey grass" << endl;
-		cout << "\t" << numCrossingMonkeyGrass2Sago << " crossing monkey grass -> sago" << endl;
-		exit( -1 );
+    /*
+    * One more crossing this way
+    */
+    numCrossingSago2MonkeyGrass++;
+
+    /*
+    * Check for lizards cross both ways
+    */
+    if (numCrossingMonkeyGrass2Sago && UNIDIRECTIONAL) {
+        cout << "\tCrash!  We have a pile-up on the concrete." << endl;
+        cout << "\t" << numCrossingSago2MonkeyGrass << " crossing sago -> monkey grass" << endl;
+        cout << "\t" << numCrossingMonkeyGrass2Sago << " crossing monkey grass -> sago" << endl;
+        exit( -1 );
     }
 
+    lock.unlock(); // SW
 
 	/*
      * It takes a while to cross, so simulate it
@@ -90,12 +101,13 @@ void Lizard::crossSago2MonkeyGrass() {
 	sleep( CROSS_SECONDS );
 
     /*
-     * That one seems to have made it
-     */
+    * That one seems to have made it
+    */
+    lock.lock(); // SW
     numCrossingSago2MonkeyGrass--;
 }
 
-void Lizard::madeIt2MonkeyGrass() {
+void Lizard::madeIt2MonkeyGrass(unique_lock<mutex>& lock) { // SW
 	/*
      * Whew, made it across
      */
@@ -104,10 +116,8 @@ void Lizard::madeIt2MonkeyGrass() {
 		cout << flush;
     }
 
-
-
-
-
+    lock.unlock(); // SW
+    crossingCondition.notify_all(); // SW
 }
 
 void Lizard::eat() {
@@ -131,15 +141,17 @@ void Lizard::eat() {
     }
 }
 
-void Lizard::monkeyGrass2SagoIsSafe() {
+void Lizard::monkeyGrass2SagoIsSafe(unique_lock<mutex>& lock) { // SW
 	if (debug) {
 		cout << "[" << _id << "] checking  monkey grass -> sago" << endl;
 		cout << flush;
     }
 
+    lock.lock(); // SW
 
-
-
+    crossingCondition.wait(lock, [] { // SW
+        return numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING; // SW
+    }); // SW
 
 	if (debug) {
 		cout << "[" << _id << "] thinks  monkey grass -> sago  is safe" << endl;
@@ -147,11 +159,16 @@ void Lizard::monkeyGrass2SagoIsSafe() {
     }
 }
 
-void Lizard::crossMonkeyGrass2Sago() {
+void Lizard::crossMonkeyGrass2Sago(unique_lock<mutex>& lock) { // SW
 	if (debug) {
 		cout << "[" << _id << "] crossing  monkey grass -> sago" << endl;
 		cout << flush;
     }
+
+    if (!lock.owns_lock()) { // SW
+        cout << "ERROR: Lock not kept between method calls" << endl; // SW
+        exit(1); // SW
+    } // SW
 
     /*
      * One more crossing this way
@@ -169,6 +186,8 @@ void Lizard::crossMonkeyGrass2Sago() {
 		exit( -1 );
     }
 
+    lock.unlock(); // SW
+
 	/*
      * It takes a while to cross, so simulate it
      */
@@ -177,10 +196,11 @@ void Lizard::crossMonkeyGrass2Sago() {
 	/*
      * That one seems to have made it
      */
+    lock.lock(); // SW
 	numCrossingMonkeyGrass2Sago--;
 }
 
-void Lizard::madeIt2Sago() {
+void Lizard::madeIt2Sago(unique_lock<mutex>& lock) { // SW
 	/*
      * Whew, made it across
      */
@@ -188,6 +208,9 @@ void Lizard::madeIt2Sago() {
 		cout << "[" << _id << "] made the  monkey grass -> sago  crossing" << endl;
 		cout << flush;
     }
+
+    lock.unlock(); // SW
+    crossingCondition.notify_all(); // SW
 }
 
 void Lizard::sleepNow() {
@@ -208,8 +231,10 @@ void Lizard::sleepNow() {
     }
 }
 
-void Lizard::lizardThread(Lizard *aLizard) {	
-	if (debug) {
+void Lizard::lizardThread(Lizard *aLizard) { // SW
+	unique_lock<mutex> lock(crossingMutex, defer_lock); // SW
+    
+    if (debug) {
         cout << "[" << aLizard->getId() << "] lizard is alive" << endl;
         cout << flush;
     }
@@ -222,23 +247,13 @@ void Lizard::lizardThread(Lizard *aLizard) {
        * some functions by filling in the code.  Some  
        * are already completed - see the comments.
        */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        aLizard->sleepNow(); // SW
+        aLizard->sago2MonkeyGrassIsSafe(lock); // SW
+        aLizard->crossSago2MonkeyGrass(lock); // SW
+        aLizard->madeIt2MonkeyGrass(lock); // SW
+        aLizard->eat(); // SW
+        aLizard->monkeyGrass2SagoIsSafe(lock); // SW
+        aLizard->crossMonkeyGrass2Sago(lock); // SW
+        aLizard->madeIt2Sago(lock); // SW
     }
 }

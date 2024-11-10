@@ -1,20 +1,10 @@
 #include <iostream>
 #include <unistd.h>
+#include <mutex>
 #include "./cat.hpp"
 #include "./constants.hpp"
+#include "./global.hpp"
 using namespace std;
-
-/**************************************************/
-/* Please leave these variables alone.  They are  */
-/* used to check the proper functioning of your   */
-/* program.  They should only be used in the code */
-/* I have provided.                               */
-/**************************************************/
-int numCrossingSago2MonkeyGrass;
-int numCrossingMonkeyGrass2Sago;
-int debug;
-int running;
-/**************************************************/
 
 Cat::Cat (int id) {
 	_id = id;
@@ -26,11 +16,16 @@ int Cat::getId() {
 
 void Cat::run() {
     // launch the thread to simulate the cat's behavior	 
-    
+    _catThread = new thread(catThread, this); // SW
 }
 
 void Cat::wait() {
     // wait for the thread to terminate
+    if (_catThread && _catThread->joinable()) { // SW
+        _catThread->join(); // SW
+		delete _catThread; // SW
+		_catThread = nullptr; // SW
+    } // SW
 }
 
 void Cat::sleepNow() {
@@ -52,7 +47,8 @@ void Cat::sleepNow() {
 }
 
 void Cat::catThread (Cat *aCat) {
-	
+	unique_lock<mutex> lock(crossingMutex, defer_lock); // SW
+
 	if (debug) {
 		cout << "[" << aCat->getId() << "] cat is alive\n";
 		cout << flush;
@@ -61,8 +57,7 @@ void Cat::catThread (Cat *aCat) {
 	while(running) {
 		aCat->sleepNow();
 
-
-
+		lock.lock(); // SW
 		/*
 	     * Check for too many lizards crossing
 	     */
@@ -70,5 +65,6 @@ void Cat::catThread (Cat *aCat) {
             cout << "\tThe cats are happy - they have toys.\n";
             exit( -1 );
 		}
+		lock.unlock(); // SW
     }
 }
