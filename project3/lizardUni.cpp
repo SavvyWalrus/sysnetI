@@ -46,7 +46,7 @@ using namespace std;
  * Make this 1 to check for lizards travelling in both directions
  * Leave it 0 to allow bidirectional travel
  */
-#define UNIDIRECTIONAL       0
+#define UNIDIRECTIONAL       1
 
 /*
  * Set this to the number of seconds you want the lizard world to
@@ -367,7 +367,7 @@ void Lizard::sago2MonkeyGrassIsSafe(unique_lock<mutex>& lock) // SW
 	lock.lock(); // SW
 
     crossingCondition.wait(lock, [] { // SW
-        return numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING; // SW
+        return (numCrossingMonkeyGrass2Sago == 0 && numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING); // SW
     }); // SW
 
 	if (debug)
@@ -498,7 +498,7 @@ void Lizard::monkeyGrass2SagoIsSafe(unique_lock<mutex>& lock) // SW
     lock.lock(); // SW
 
     crossingCondition.wait(lock, [] { // SW
-        return numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING; // SW
+        return (numCrossingSago2MonkeyGrass == 0 && numCrossingMonkeyGrass2Sago < MAX_LIZARD_CROSSING); // SW
     }); // SW
 
 	if (debug)

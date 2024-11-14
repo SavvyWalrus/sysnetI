@@ -7,6 +7,9 @@ RM=rm -rf
 lizard: lizard.o
 	$(CXX) -o $@ $^
 
+lizardUni: lizardUni.o
+	$(CXX) -o $@ $^
+
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
