@@ -366,9 +366,15 @@ void Lizard::sago2MonkeyGrassIsSafe(unique_lock<mutex>& lock) // SW
 
 	lock.lock(); // SW
 
+  if (UNIDIRECTIONAL) { // SW
     crossingCondition.wait(lock, [] { // SW
         return (numCrossingMonkeyGrass2Sago == 0 && numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING); // SW
     }); // SW
+  } else { // SW
+    crossingCondition.wait(lock, [] { // SW
+        return numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass < MAX_LIZARD_CROSSING; // SW
+    }); // SW
+  } // SW
 
 	if (debug)
     {
@@ -497,9 +503,15 @@ void Lizard::monkeyGrass2SagoIsSafe(unique_lock<mutex>& lock) // SW
 
     lock.lock(); // SW
 
+  if (UNIDIRECTIONAL) { // SW
     crossingCondition.wait(lock, [] { // SW
-        return (numCrossingSago2MonkeyGrass == 0 && numCrossingMonkeyGrass2Sago < MAX_LIZARD_CROSSING); // SW
+      return (numCrossingSago2MonkeyGrass == 0 && numCrossingMonkeyGrass2Sago < MAX_LIZARD_CROSSING); // SW
     }); // SW
+  } else { // SW
+    crossingCondition.wait(lock, [] { // SW
+      return numCrossingSago2MonkeyGrass + numCrossingMonkeyGrass2Sago < MAX_LIZARD_CROSSING; // SW
+    }); // SW
+  } // SW
 
 	if (debug)
     {
