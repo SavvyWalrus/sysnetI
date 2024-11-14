@@ -222,6 +222,7 @@ void Cat::sleepNow()
   */
 void Cat::catThread (Cat *aCat)
 {
+  unique_lock<mutex> lock(crossingMutex, defer_lock); // SW
 
 	if (debug)
     {
@@ -233,10 +234,14 @@ void Cat::catThread (Cat *aCat)
     {
 		aCat->sleepNow();
 
+    lock.lock(); // SW
+    int crossingNum = numCrossingSago2MonkeyGrass + numCrossingMonkeyGrass2Sago; // SW
+    lock.unlock(); // SW
+
 		/*
 	     * Check for too many lizards crossing
 	     */
-		if (numCrossingSago2MonkeyGrass + numCrossingMonkeyGrass2Sago > MAX_LIZARD_CROSSING)
+		if (crossingNum > MAX_LIZARD_CROSSING)
 		{
 		  cout << "\tThe cats are happy - they have toys.\n";
 		  exit( -1 );
